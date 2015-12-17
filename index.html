@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <title>Markdown Preview</title>
+        <!-- Bootstrap -->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn"t work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <link rel="stylesheet" href="https:////cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
+        <link href="./themes/default/css/common.css" rel="stylesheet">
+        <link href="./themes/markdown/github.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="wrapper container-fluid">
+            <div class="markdown row">
+                <div class="editor col-xs-6 col-md-6">
+                    <textarea class="form-control" rows="3" v-model="text" v-on:keyup="update() | debounce 500">
+
+                    </textarea>
+                </div>
+                <div class="preview col-xs-6 col-md-6" v-html="preview">
+                </div>
+            </div>
+        </div>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/vue/1.0.10/vue.min.js"></script>
+        <script src="./libs/marked.min.js"></script>
+    </body>
+</html>
+<script>
+var markdown = new Vue({
+    el: '.markdown',
+    data: {
+        text    : '',
+        preview : '',
+    },
+    ready: function() {
+        marked.setOptions({
+            highlight: function (code) {
+                return require('highlight.js').highlightAuto(code).value;
+            }
+        });
+        var that = this;
+        $.get('./sample.md', function(data) {
+            that.text = data;
+            that.preview = marked(data);
+        });
+    },
+    methods: {
+        update: function() {
+            this.preview = marked(this.text);
+        }
+    }
+});
+</script>

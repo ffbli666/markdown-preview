@@ -1,1 +1,7 @@
-# markdown-preview
+# Markdown-Preview
+
+## Develop
+```
+npm install
+npm start
+```
