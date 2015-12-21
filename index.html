@@ -18,8 +18,12 @@
         <![endif]-->
         <link rel="stylesheet" href="themes/default/css/highlight.min.css">
         <link rel="stylesheet" href="themes/default/css/codemirror.css">
+        <link rel="stylesheet" href="themes/default/css/monokai.css">
+        <link rel="stylesheet" href="libs/codemirror/dialog/dialog.css">
+        <link rel="stylesheet" href="libs/codemirror/search/matchesonscrollbar.css">
         <link rel="stylesheet" href="themes/markdown/github.css" rel="stylesheet">
         <link rel="stylesheet" href="themes/default/css/common.css" rel="stylesheet">
+
     </head>
     <body>
         <div class="wrapper container-fluid">
@@ -38,23 +42,38 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="libs/bootstrap.min.js"></script>
         <script src="libs/marked.min.js"></script>
-        <script src="libs/codemirror.js"></script>
+        <script src="libs/codemirror/codemirror.js"></script>
+        <script src="libs/codemirror/markdown.js"></script>
+        <script src="libs/codemirror/sublime.js"></script>
+        <script src="libs/codemirror/edit/continuelist.js"></script>
+        <script src="libs/codemirror/selection/active-line.js"></script>
+        <script src="libs/codemirror/dialog/dialog.js"></script>
+        <script src="libs/codemirror/search/searchcursor.js"></script>
+        <script src="libs/codemirror/search/search.js"></script>
+        <script src="libs/codemirror/scroll/annotatescrollbar.js"></script>
+        <script src="libs/codemirror/search/matchesonscrollbar.js"></script>
     </body>
 </html>
 <script>
-
-$( ".preview" ).delegate( "a", "click", function(e) {
+"use strict";
+$(".preview").delegate("a", "click", function(e) {
     e.preventDefault();
-    if (!/^#/.test($(this).attr('href'))) {
+    if (!/^#/.test($(this).attr("href"))) {
         console.log("prevent redirect");
         return;
     }
-    window.location.href = $(this).attr('href');
+    window.location.href = $(this).attr("href");
 });
 
 var preview = $(".preview")[0];
+
 var editor = CodeMirror.fromTextArea($(".editor textarea")[0], {
-    lineNumbers: true
+    mode: 'markdown',
+    lineNumbers: true,
+    keyMap: "sublime",
+    theme: "monokai",
+    styleActiveLine: true,
+    extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"}
 });
 
 editor.on("scroll", function(e){
@@ -76,8 +95,8 @@ editor.on("keyup", function(e){
 });
 
 $.get("./sample.md", function(data) {
-        editor.setValue(data);
-        preview.innerHTML = marked(data);
+    editor.setValue(data);
+    preview.innerHTML = marked(data);
 });
 
 </script>
