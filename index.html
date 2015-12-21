@@ -92,19 +92,19 @@ editor.on("scroll", function(e){
 });
 
 var delay = undefined;
-editor.on("keyup", function(e){
-    if (!delay) {
-        delay = setTimeout(function(){
-            preview.innerHTML = marked(editor.getValue());
-            clearTimeout(delay);
-            delay = undefined;
-        }, 1000);
-    }
-});
 
 $.get("./sample.md", function(data) {
     editor.setValue(data);
     preview.innerHTML = marked(data);
+    editor.on("change", function(e){
+        if (!delay) {
+            delay = setTimeout(function(){
+                preview.innerHTML = marked(editor.getValue());
+                clearTimeout(delay);
+                delay = undefined;
+            }, 1000);
+        }
+    });
 });
 
 </script>
