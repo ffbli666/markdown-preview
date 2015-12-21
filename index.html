@@ -95,7 +95,6 @@ var delay = undefined;
 editor.on("keyup", function(e){
     if (!delay) {
         delay = setTimeout(function(){
-            console.log(new Date());
             preview.innerHTML = marked(editor.getValue());
             clearTimeout(delay);
             delay = undefined;
