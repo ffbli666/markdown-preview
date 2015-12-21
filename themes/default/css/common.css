@@ -51,3 +51,7 @@ a img {
 .preview {
     overflow: auto
 }
+
+.CodeMirror {
+    height: 100%;
+}

@@ -17,18 +17,19 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <link rel="stylesheet" href="themes/default/css/highlight.min.css">
-        <link rel="stylesheet" href="themes/default/css/common.css" rel="stylesheet">
+        <link rel="stylesheet" href="themes/default/css/codemirror.css">
         <link rel="stylesheet" href="themes/markdown/github.css" rel="stylesheet">
+        <link rel="stylesheet" href="themes/default/css/common.css" rel="stylesheet">
     </head>
     <body>
         <div class="wrapper container-fluid">
             <div class="markdown row">
                 <div class="editor col-xs-6 col-md-6">
-                    <textarea class="form-control" rows="3" v-model="text" v-on:keyup="update() | debounce 500" v-on:scroll="scroll()">
+                    <textarea class="form-control" rows="3">
 
                     </textarea>
                 </div>
-                <div class="preview col-xs-6 col-md-6" v-html="preview">
+                <div class="preview col-xs-6 col-md-6">
                 </div>
             </div>
         </div>
@@ -36,39 +37,47 @@
         <script src="libs/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
         <!-- Latest compiled and minified JavaScript -->
         <script src="libs/bootstrap.min.js"></script>
-        <script src="libs/vue.min.js"></script>
         <script src="libs/marked.min.js"></script>
+        <script src="libs/codemirror.js"></script>
     </body>
 </html>
 <script>
-var markdown = new Vue({
-    el: ".markdown",
-    data: {
-        text    : "",
-        preview : "",
-    },
-    ready: function() {
-        var that = this;
-        marked.setOptions({
-            highlight: function (code) {
-                return require("highlight.js").highlightAuto(code).value;
-            }
-        });
-        $.get("./sample.md", function(data) {
-            that.text = data;
-            that.preview = marked(data);
-        });
-    },
-    methods: {
-        update: function() {
-            this.preview = marked(this.text);
-        },
-        scroll: function(e) {
-            var e = $(".editor textarea");
-            var p = $(".preview");
-            var percent = e.scrollTop() / e.prop("scrollHeight");
-            p.scrollTop(p.prop("scrollHeight") * percent);
-        },
+
+$( ".preview" ).delegate( "a", "click", function(e) {
+    e.preventDefault();
+    if (!/^#/.test($(this).attr('href'))) {
+        console.log("prevent redirect");
+        return;
+    }
+    window.location.href = $(this).attr('href');
+});
+
+var preview = $(".preview")[0];
+var editor = CodeMirror.fromTextArea($(".editor textarea")[0], {
+    lineNumbers: true
+});
+
+editor.on("scroll", function(e){
+    var e = $(".CodeMirror-scroll");
+    var p = $(".preview");
+    var percent = e.scrollTop() / e.prop("scrollHeight");
+    p.scrollTop(p.prop("scrollHeight") * percent);
+});
+
+var delay = undefined;
+editor.on("keyup", function(e){
+    if (!delay) {
+        delay = setTimeout(function(){
+            preview.innerHTML = marked(editor.getValue());
+            clearTimeout(delay);
+            delay = undefined;
+        }, 1000);
     }
 });
+
+$.get("./sample.md", function(data) {
+        editor.setValue(data);
+        preview.innerHTML = marked(data);
+});
+
 </script>
