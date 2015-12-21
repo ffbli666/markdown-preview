@@ -16,7 +16,7 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <link rel="stylesheet" href="themes/default/css/highlight.min.css">
+        <link rel="stylesheet" href="themes/highlight/github.css">
         <link rel="stylesheet" href="themes/default/css/codemirror.css">
         <link rel="stylesheet" href="themes/default/css/monokai.css">
         <link rel="stylesheet" href="libs/codemirror/dialog/dialog.css">
@@ -42,7 +42,9 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="libs/bootstrap.min.js"></script>
         <script src="libs/marked.min.js"></script>
+        <script src="libs/highlight.min.js"></script>
         <script src="libs/codemirror/codemirror.js"></script>
+        <script src="libs/codemirror/search/matchesonscrollbar.js"></script>
         <script src="libs/codemirror/markdown.js"></script>
         <script src="libs/codemirror/sublime.js"></script>
         <script src="libs/codemirror/edit/continuelist.js"></script>
@@ -56,6 +58,7 @@
 </html>
 <script>
 "use strict";
+[]
 $(".preview").delegate("a", "click", function(e) {
     e.preventDefault();
     if (!/^#/.test($(this).attr("href"))) {
@@ -65,10 +68,16 @@ $(".preview").delegate("a", "click", function(e) {
     window.location.href = $(this).attr("href");
 });
 
+marked.setOptions({
+    highlight: function (code) {
+        return hljs.highlightAuto(code).value;
+    }
+});
+
 var preview = $(".preview")[0];
 
 var editor = CodeMirror.fromTextArea($(".editor textarea")[0], {
-    mode: 'markdown',
+    mode: "markdown",
     lineNumbers: true,
     keyMap: "sublime",
     theme: "monokai",
@@ -87,6 +96,7 @@ var delay = undefined;
 editor.on("keyup", function(e){
     if (!delay) {
         delay = setTimeout(function(){
+            console.log(new Date());
             preview.innerHTML = marked(editor.getValue());
             clearTimeout(delay);
             delay = undefined;
