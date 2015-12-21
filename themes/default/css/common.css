@@ -4,7 +4,6 @@ html {
 
 body {
     font-family: "segoe ui", Helvetica, Arial, "WenQuanYi Zen Hei", "Apple LiGothic Medium", "Microsoft JhengHei", sans-serif;
-
     height: 100%;
     font-size: 16px;
 }
@@ -46,6 +45,7 @@ a img {
 
 .editor textarea {
     resize: none;
+    font-size: 16px;
 }
 
 .preview {
